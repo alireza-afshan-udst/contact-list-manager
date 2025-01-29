@@ -18,7 +18,7 @@ class ContactForm(FlaskForm):
     email = StringField('Email',
                         validators=[
                             InputRequired(message="Email required."),
-                            Email(message="Must be a valid email.")
+                            Email(message="Must look like 'johnsmith@example.com'")
                             ])
     type = SelectField('Type', 
                         choices=[
