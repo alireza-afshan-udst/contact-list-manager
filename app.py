@@ -62,8 +62,7 @@ def update_contact(id):
 @app.route('/delete/<int:id>')
 def delete_contact(id):
     contact = Contact.query.get(id)
-    # Bug: Not actually deleting the contact but returning success
-    # db.session.delete(contact)
+    db.session.delete(contact)
     db.session.commit()
     return redirect(url_for('list_contacts'))
 
@@ -114,10 +113,14 @@ def update_contact_api(id):
 def delete_contact_api(id):
     contact = Contact.query.get(id)
     if contact:
-        # Bug: Same issue in API - not actually deleting
-        # db.session.delete(contact)
-        db.session.commit()
-    return '', 204  # Returns success even though nothing was deleted
+        #put in try catch block so it returns the appropriate response.
+        try:
+            db.session.delete(contact)
+            db.session.commit()
+            return '', 204
+        except:
+            db.session.rollback()
+            return '', 500
 
 if __name__ == '__main__':
     app.run(debug=True, port=5001) 
