@@ -1,9 +1,15 @@
-document.getElementById('searchInput').addEventListener('input', function(e) {
-    const searchText = e.target.value.toLowerCase();
-    const rows = document.querySelectorAll('tbody tr');
-    
-    rows.forEach(row => {
-        const text = row.textContent.toLowerCase();
-        row.style.display = text.includes(searchText) ? '' : 'none';
-    });
-}); 
+const searchInput = document.getElementById("searchInput");
+
+searchInput.addEventListener("input", filterContacts);
+searchInput.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") e.preventDefault(); // Prevents form submission
+});
+
+function filterContacts() {
+  const searchText = searchInput.value.toLowerCase();
+  document.querySelectorAll("tbody tr").forEach((row) => {
+    row.style.display = row.textContent.toLowerCase().includes(searchText)
+      ? ""
+      : "none";
+  });
+}
