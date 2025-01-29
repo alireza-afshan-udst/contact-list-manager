@@ -18,7 +18,7 @@
     <tbody>
         {% for contact in contacts %}
         <tr>
-            <td>{{ contact.name }}</td>
+            <td>{{ contact.name.lower().capitalize() }}</td>
             <td>{{ contact.phone }}</td>
             <td>{{ contact.email }}</td>
             <td>{{ contact.type }}</td>
