@@ -28,13 +28,15 @@ def list_contacts():
 @app.route('/add', methods=['GET', 'POST'])
 def add_contact():
     form = ContactForm()
+
     if form.validate_on_submit():
         contact = Contact(
             name=form.name.data,
             phone=form.phone.data,
             email=form.email.data,
-            type=form.type.data
+            type=form.type.data,
         )
+       
         try:
             db.session.add(contact)
             db.session.commit()
@@ -43,6 +45,7 @@ def add_contact():
         except Exception as e:
             db.session.rollback()
             flash('Error adding contact. Phone number might be duplicate.', 'error')
+  
     return render_template('add_contact.html', form=form)
 
 @app.route('/update/<int:id>', methods=['GET', 'POST'])
