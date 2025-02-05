@@ -28,7 +28,7 @@ def list_contacts():
 @app.route('/add', methods=['GET', 'POST'])
 def add_contact():
     form = ContactForm()
-
+    
     if form.validate_on_submit():
         contact = Contact(
             name=form.name.data,
@@ -52,6 +52,7 @@ def add_contact():
 def update_contact(id):
     contact = db.session.get(Contact, id)
     form = ContactForm(obj=contact)
+    
     if form.validate_on_submit():
         contact.name = form.name.data
         contact.phone = form.phone.data
@@ -101,6 +102,7 @@ def create_contact():
 @app.route('/api/contacts/<int:id>', methods=['PUT'])
 def update_contact_api(id):
     contact = db.session.get(Contact, id)
+    
     if contact is None:
         return jsonify({'error': 'Contact not found'}), 404
     data = request.get_json()
