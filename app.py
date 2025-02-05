@@ -50,13 +50,13 @@ def add_contact():
 
 @app.route('/update/<int:id>', methods=['GET', 'POST'])
 def update_contact(id):
-    contact = Contact.query.get(id)
+    contact = db.session.get(Contact, id)
     form = ContactForm(obj=contact)
-    
     if form.validate_on_submit():
         contact.name = form.name.data
         contact.phone = form.phone.data
         contact.email = form.email.data
+        contact.type = form.type.data
         db.session.commit()
         return redirect(url_for('list_contacts'))
     
@@ -64,7 +64,7 @@ def update_contact(id):
 
 @app.route('/delete/<int:id>')
 def delete_contact(id):
-    contact = Contact.query.get(id)
+    contact = db.session.get(Contact, id)
     db.session.delete(contact)
     db.session.commit()
     return redirect(url_for('list_contacts'))
@@ -77,7 +77,9 @@ def get_contacts():
 
 @app.route('/api/contacts/<int:id>', methods=['GET'])
 def get_contact(id):
-    contact = Contact.query.get_or_404(id)
+    contact = db.session.get(Contact, id)
+    if contact is None:
+        return jsonify({'error': 'Contact not found'}), 404
     return jsonify(contact.to_dict())
 
 @app.route('/api/contacts', methods=['POST'])
@@ -98,7 +100,9 @@ def create_contact():
 
 @app.route('/api/contacts/<int:id>', methods=['PUT'])
 def update_contact_api(id):
-    contact = Contact.query.get_or_404(id)
+    contact = db.session.get(Contact, id)
+    if contact is None:
+        return jsonify({'error': 'Contact not found'}), 404
     data = request.get_json()
     
     for key, value in data.items():
@@ -114,16 +118,11 @@ def update_contact_api(id):
 
 @app.route('/api/contacts/<int:id>', methods=['DELETE'])
 def delete_contact_api(id):
-    contact = Contact.query.get(id)
+    contact = db.session.get(Contact, id)
     if contact:
-        #put in try catch block so it returns the appropriate response.
-        try:
-            db.session.delete(contact)
-            db.session.commit()
-            return '', 204
-        except:
-            db.session.rollback()
-            return '', 500
+        db.session.delete(contact)
+        db.session.commit()
+    return '', 204
 
 if __name__ == '__main__':
     app.run(debug=True, port=5001) 
