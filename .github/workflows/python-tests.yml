@@ -3,7 +3,7 @@ name: Test Web App
 on:
   push:
     branches:
-      - master
+      - main
 jobs:
   test-job:
     runs-on: ubuntu-latest
